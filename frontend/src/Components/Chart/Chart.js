@@ -8,6 +8,7 @@ import {Chart as ChartJs,
     Tooltip,
     Legend,
     ArcElement,
+    Filler,
 } from 'chart.js'
 
 import {Line} from 'react-chartjs-2'
@@ -24,6 +25,7 @@ ChartJs.register(
     Tooltip,
     Legend,
     ArcElement,
+    Filler,
 )
 
 function Chart() {
@@ -43,8 +45,15 @@ function Chart() {
                         return amount
                     })
                 ],
-                backgroundColor: 'green',
-                tension: .2
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#22c55e',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
             },
             {
                 label: 'Expenses',
@@ -54,27 +63,103 @@ function Chart() {
                         return amount
                     })
                 ],
-                backgroundColor: 'red',
-                tension: .2
+                borderColor: '#ef4444',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#ef4444',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
             }
         ]
+    }
+
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    usePointStyle: true,
+                    padding: 20,
+                    font: {
+                        size: 12,
+                        family: "'Nunito', sans-serif",
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(34, 34, 96, 0.9)',
+                titleFont: {
+                    size: 13,
+                    family: "'Nunito', sans-serif",
+                },
+                bodyFont: {
+                    size: 12,
+                    family: "'Nunito', sans-serif",
+                },
+                padding: 12,
+                cornerRadius: 8,
+                displayColors: true,
+                callbacks: {
+                    label: function(context) {
+                        return `${context.dataset.label}: $${context.parsed.y.toLocaleString()}`
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    font: {
+                        size: 11,
+                        family: "'Nunito', sans-serif",
+                    },
+                    color: 'rgba(34, 34, 96, 0.5)',
+                }
+            },
+            y: {
+                grid: {
+                    color: 'rgba(34, 34, 96, 0.08)',
+                },
+                ticks: {
+                    font: {
+                        size: 11,
+                        family: "'Nunito', sans-serif",
+                    },
+                    color: 'rgba(34, 34, 96, 0.5)',
+                    callback: function(value) {
+                        return '$' + value.toLocaleString()
+                    }
+                }
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
     }
 
 
     return (
         <ChartStyled >
-            <Line data={data} />
+            <Line data={data} options={options} />
         </ChartStyled>
     )
 }
 
 const ChartStyled = styled.div`
-    background: #FCF6F9;
-    border: 2px solid #FFFFFF;
-    box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
-    padding: 1rem;
-    border-radius: 20px;
     height: 100%;
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
 `;
 
 export default Chart
