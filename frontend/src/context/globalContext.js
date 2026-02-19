@@ -86,6 +86,57 @@ export const GlobalProvider = ({children}) => {
         return history.slice(0, 3)
     }
 
+    const getExpensesByCategory = () => {
+        const categoryTotals = {}
+        expenses.forEach((expense) => {
+            const { category, amount } = expense
+            if (categoryTotals[category]) {
+                categoryTotals[category] += amount
+            } else {
+                categoryTotals[category] = amount
+            }
+        })
+        return categoryTotals
+    }
+
+    const getIncomesByCategory = () => {
+        const categoryTotals = {}
+        incomes.forEach((income) => {
+            const { category, amount } = income
+            if (categoryTotals[category]) {
+                categoryTotals[category] += amount
+            } else {
+                categoryTotals[category] = amount
+            }
+        })
+        return categoryTotals
+    }
+
+    const getSavingsRate = () => {
+        const income = totalIncome()
+        const expense = totalExpenses()
+        if (income === 0) return 0
+        return ((income - expense) / income * 100).toFixed(1)
+    }
+
+    const getTransactionCount = () => {
+        return {
+            total: incomes.length + expenses.length,
+            incomes: incomes.length,
+            expenses: expenses.length
+        }
+    }
+
+    const getAverageIncome = () => {
+        if (incomes.length === 0) return 0
+        return (totalIncome() / incomes.length).toFixed(2)
+    }
+
+    const getAverageExpense = () => {
+        if (expenses.length === 0) return 0
+        return (totalExpenses() / expenses.length).toFixed(2)
+    }
+
 
     return (
         <GlobalContext.Provider value={{
@@ -101,6 +152,12 @@ export const GlobalProvider = ({children}) => {
             totalExpenses,
             totalBalance,
             transactionHistory,
+            getExpensesByCategory,
+            getIncomesByCategory,
+            getSavingsRate,
+            getTransactionCount,
+            getAverageIncome,
+            getAverageExpense,
             error,
             setError
         }}>
